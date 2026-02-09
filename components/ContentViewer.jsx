@@ -5,9 +5,9 @@ import { motion, AnimatePresence } from 'framer-motion'
 import ReactMarkdown from 'react-markdown'
 import QuizComponent from './QuizComponent'
 import VideoPlayer from './VideoPlayer'
-import { BookOpen, Video, FileQuestion, ArrowRight } from 'lucide-react'
+import { BookOpen, Video, FileQuestion, ArrowRight, StickyNote } from 'lucide-react'
 
-export default function ContentViewer({ chapter, subchapter, onTextSelection, onExplainClick }) {
+export default function ContentViewer({ chapter, subchapter, onTextSelection, onExplainClick, onNotesClick, rightPanelWidth = 384 }) {
   const contentRef = useRef(null)
   const [showQuiz, setShowQuiz] = useState(false)
   const [highlightedText, setHighlightedText] = useState('')
@@ -31,7 +31,7 @@ export default function ContentViewer({ chapter, subchapter, onTextSelection, on
         setHighlightedText(selectedText)
         setSelectionPosition({
           x: rect.left + (rect.width / 2),
-          y: rect.top + window.scrollY  // Position at top of selection
+          y: rect.top + window.scrollY
         })
         
         onTextSelection(selectedText)
@@ -48,8 +48,6 @@ export default function ContentViewer({ chapter, subchapter, onTextSelection, on
     if (onExplainClick) {
       onExplainClick()
     }
-    // Optional: clear selection after clicking
-    // setHighlightedText('')
   }
 
   // Truncate text to first few words
@@ -60,7 +58,7 @@ export default function ContentViewer({ chapter, subchapter, onTextSelection, on
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-8">
+    <div className="max-w-4xl mx-auto p-8 relative">
       {/* Breadcrumb */}
       <motion.div 
         className="mb-6 flex items-center space-x-2 text-sm text-gray-600"
@@ -164,7 +162,25 @@ export default function ContentViewer({ chapter, subchapter, onTextSelection, on
         </p>
       </motion.div>
 
-      {/* Floating Selection Indicator - Appears ABOVE the selected text */}
+      {/* Floating Notes Button - ICON ONLY with dynamic positioning */}
+      <motion.button
+        onClick={onNotesClick}
+        className="fixed bottom-8 bg-yellow-400 hover:bg-yellow-500 text-gray-900 p-4 rounded-full shadow-lg transition-all z-30"
+        style={{
+          right: `${rightPanelWidth + 32}px`,
+          transition: 'right 0.15s ease-out'
+        }}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        initial={{ opacity: 0, scale: 0 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.6 }}
+        title="Open Notes"
+      >
+        <StickyNote size={24} />
+      </motion.button>
+
+      {/* Floating Selection Indicator */}
       <AnimatePresence>
         {highlightedText && (
           <motion.div
@@ -175,28 +191,28 @@ export default function ContentViewer({ chapter, subchapter, onTextSelection, on
             style={{
               position: 'fixed',
               left: `${selectionPosition.x}px`,
-              top: `${selectionPosition.y - 80}px`,  // 80px above the selection
+              top: `${selectionPosition.y - 80}px`,
               transform: 'translateX(-50%)',
               zIndex: 50
             }}
             className="pointer-events-auto"
           >
-  <div className="bg-white rounded-lg shadow-2xl overflow-hidden border border-gray-200">
-  <div className="px-4 py-2 bg-gray-200 border-b border-gray-200">
-    <p className="text-xs font-medium text-gray-700 truncate max-w-xs">
-      &quot;{getTruncatedText(highlightedText)}&quot;
-    </p>
-  </div>
-  <motion.button
-    onClick={handleExplainClick}
-    className="w-full px-4 py-2.5 flex items-center justify-center space-x-2 bg-primary-600 text-white hover:bg-primary-700 transition-colors"
-    whileHover={{ scale: 1.02 }}
-    whileTap={{ scale: 0.98 }}
-  >
-    <span className="text-sm font-semibold">Check AI Explanation</span>
-    <ArrowRight size={16} />
-  </motion.button>
-</div>
+            <div className="bg-white rounded-lg shadow-2xl overflow-hidden border border-gray-200">
+              <div className="px-4 py-2 bg-gray-50 border-b border-gray-200">
+                <p className="text-xs font-medium text-gray-700 truncate max-w-xs">
+                  &quot;{getTruncatedText(highlightedText)}&quot;
+                </p>
+              </div>
+              <motion.button
+                onClick={handleExplainClick}
+                className="w-full px-4 py-2.5 flex items-center justify-center space-x-2 bg-primary-600 text-white hover:bg-primary-700 transition-colors"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <span className="text-sm font-semibold">Check AI Explanation</span>
+                <ArrowRight size={16} />
+              </motion.button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

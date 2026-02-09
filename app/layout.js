@@ -4,7 +4,7 @@ import { Inter } from 'next/font/google'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'SocratiQ - AI-Powered Learning Platform',
+  title: 'Bangkit - AI-Powered Learning Platform',
   description: 'Personalized education with adaptive learning technologies',
 }
 
