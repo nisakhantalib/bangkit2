@@ -70,7 +70,7 @@ Maintaining healthy lungs is crucial for:
 - Supporting cellular respiration and energy production
 - Overall physical performance and well-being
         `,
-        videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+        videoUrl: "https://youtu.be/ZB7uA5o0mS4?si=wfyaIkv5HxadNc0J",
         quiz: {
           questions: [
             {
@@ -181,7 +181,7 @@ Glucose → Ethanol + Carbon dioxide + Energy (2 ATP)
 - Enables muscle contraction and movement
 - Powers active transport and protein synthesis
         `,
-        videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+        videoUrl: "https://youtu.be/SUPQVg1vO0Q?si=yHjMjtSN1OuAMVwJ",
         quiz: {
           questions: [
             {
@@ -318,7 +318,7 @@ Maintaining a healthy respiratory system is essential for overall well-being. Va
 - Frequent respiratory infections
 - Unexplained weight loss
         `,
-        videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+        videoUrl: "https://youtu.be/fQsgZloXNPY?si=PQCh3p0TOv1pPomY",
         quiz: {
           questions: [
             {
@@ -452,7 +452,7 @@ Stimulus → Receptor → Sensory neuron → Relay neuron (spinal cord) → Moto
 - Faster than conscious responses
 - Don't require thought or decision-making
         `,
-        videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+        videoUrl: "https://youtu.be/RClEbcPD9q0?si=08Er4CFn2810YBOv",
         quiz: {
           questions: [
             {
@@ -576,7 +576,7 @@ The pancreas maintains blood glucose homeostasis:
 | Target | Specific (precise location) | Widespread (multiple organs) |
 | Examples | Reflex, movement | Growth, metabolism |
         `,
-        videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+        videoUrl: "https://youtu.be/RClEbcPD9q0?si=08Er4CFn2810YBOv",
         quiz: {
           questions: [
             {
@@ -721,7 +721,7 @@ Humans use asexual reproduction in agriculture:
 4. **Crowding**: Offspring compete for resources
 5. **Harmful mutations**: Passed to all offspring
         `,
-        videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+        videoUrl: "https://youtu.be/i9zj9V8OWRk?si=tOHf4Zd7HG5SCDcY",
         quiz: {
           questions: [
             {
