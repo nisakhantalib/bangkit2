@@ -198,7 +198,7 @@ export default function ContentViewer({ chapter, subchapter, onTextSelection, on
             className="pointer-events-auto"
           >
             <div className="bg-white rounded-lg shadow-2xl overflow-hidden border border-gray-200">
-              <div className="px-4 py-2 bg-gray-50 border-b border-gray-200">
+              <div className="px-4 py-2 bg-neutral-300 border-b border-gray-200">
                 <p className="text-xs font-medium text-gray-700 truncate max-w-xs">
                   &quot;{getTruncatedText(highlightedText)}&quot;
                 </p>
