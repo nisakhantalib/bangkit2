@@ -76,11 +76,11 @@ export default function QuizComponent({ quiz, onClose }) {
         </div>
 
         <h3 className="text-2xl font-bold mb-2">
-          {passed ? '🎉 Great Job!' : '👍 Good Effort!'}
+          {passed ? '🎉 Kerja Bagus!' : '👍 Usaha yang Baik!'}
         </h3>
         
         <p className="text-gray-600 mb-6">
-          You scored <strong className="text-primary-600">{score}</strong> out of {quiz.questions.length}
+          Anda memperoleh <strong className="text-primary-600">{score}</strong> daripada {quiz.questions.length}
         </p>
 
         <div className="mb-6">
@@ -103,7 +103,7 @@ export default function QuizComponent({ quiz, onClose }) {
             whileTap={{ scale: 0.95 }}
           >
             <RefreshCw size={18} />
-            <span>Retake Quiz</span>
+            <span>Ulang Kuiz</span>
           </motion.button>
           
           <motion.button
@@ -112,7 +112,7 @@ export default function QuizComponent({ quiz, onClose }) {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            Continue Learning
+            Teruskan Pembelajaran
           </motion.button>
         </div>
       </motion.div>
@@ -124,8 +124,8 @@ export default function QuizComponent({ quiz, onClose }) {
       {/* Progress Bar */}
       <div className="mb-6">
         <div className="flex justify-between text-sm text-gray-600 mb-2">
-          <span>Question {currentQuestion + 1} of {quiz.questions.length}</span>
-          <span>{Math.round(((currentQuestion) / quiz.questions.length) * 100)}% Complete</span>
+          <span>Soalan {currentQuestion + 1} daripada {quiz.questions.length}</span>
+          <span>{Math.round(((currentQuestion) / quiz.questions.length) * 100)}% Selesai</span>
         </div>
         <div className="w-full bg-gray-200 rounded-full h-2">
           <motion.div
@@ -202,7 +202,7 @@ export default function QuizComponent({ quiz, onClose }) {
                 className="mb-6 p-4 bg-blue-50 border-l-4 border-blue-500 rounded"
               >
                 <p className="text-sm font-semibold text-blue-900 mb-2">
-                  {selectedAnswer === question.correctAnswer ? '✅ Correct!' : '❌ Incorrect'}
+                  {selectedAnswer === question.correctAnswer ? '✅ Betul!' : '❌ Salah'}
                 </p>
                 <p className="text-sm text-gray-700">{question.explanation}</p>
               </motion.div>
@@ -223,7 +223,7 @@ export default function QuizComponent({ quiz, onClose }) {
                 whileHover={selectedAnswer !== null ? { scale: 1.02 } : {}}
                 whileTap={selectedAnswer !== null ? { scale: 0.98 } : {}}
               >
-                Submit Answer
+                Submit Jawapan
               </motion.button>
             ) : (
               <motion.button
@@ -232,7 +232,7 @@ export default function QuizComponent({ quiz, onClose }) {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                {isLastQuestion ? 'Finish Quiz' : 'Next Question →'}
+                {isLastQuestion ? 'Selesai Kuiz' : 'Soalan Seterusnya →'}
               </motion.button>
             )}
           </div>

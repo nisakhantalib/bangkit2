@@ -118,7 +118,7 @@ export default function Home() {
             </div>
             <div>
               <h1 className="text-lg md:text-2xl font-bold">Bangkit</h1>
-              <p className="text-primary-200 text-xs md:text-sm hidden sm:block">Science Form 5 - AI-Powered Learning</p>
+              <p className="text-primary-200 text-xs md:text-sm hidden sm:block">Sains Tingkatan 5 - Pembelajaran Berteraskan AI</p>
             </div>
           </div>
           
@@ -132,8 +132,8 @@ export default function Home() {
             </button>
 
             <div className="text-right hidden sm:block">
-              <p className="text-xs md:text-sm font-medium">Welcome back!</p>
-              <p className="text-xs text-primary-200 hidden md:block">Continue your learning journey</p>
+              <p className="text-xs md:text-sm font-medium">Selamat kembali!</p>
+              <p className="text-xs text-primary-200 hidden md:block">Teruskan pembelajaran anda</p>
             </div>
             <div className="w-8 h-8 md:w-10 md:h-10 bg-primary-500 rounded-full flex items-center justify-center font-semibold text-xs md:text-base">
               MR
@@ -221,7 +221,7 @@ export default function Home() {
             >
               {/* Drawer Header */}
               <div className="bg-primary-700 text-white p-4 flex items-center justify-between">
-                <h2 className="text-lg font-bold">Course Content</h2>
+                <h2 className="text-lg font-bold">Kandungan Kursus</h2>
                 <button
                   onClick={() => setMobileChaptersOpen(false)}
                   className="p-2 hover:bg-primary-600 rounded-lg transition-colors"

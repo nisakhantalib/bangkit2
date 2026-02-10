@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import QuizComponent from './QuizComponent'
 import VideoPlayer from './VideoPlayer'
 import { BookOpen, Video, FileQuestion, ArrowRight, StickyNote } from 'lucide-react'
@@ -92,7 +93,7 @@ export default function ContentViewer({ chapter, subchapter, onTextSelection, on
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
       >
-        <ReactMarkdown>{subchapter.content}</ReactMarkdown>
+        <ReactMarkdown remarkPlugins={[remarkGfm]}>{subchapter.content}</ReactMarkdown>
       </motion.div>
 
       {/* Video Section */}
@@ -106,7 +107,7 @@ export default function ContentViewer({ chapter, subchapter, onTextSelection, on
           <div className="bg-gradient-to-r from-primary-50 to-blue-50 rounded-xl p-6 shadow-sm">
             <div className="flex items-center space-x-2 mb-4">
               <Video className="text-primary-600" size={24} />
-              <h2 className="text-xl font-bold text-primary-900">Video Explanation</h2>
+              <h2 className="text-xl font-bold text-primary-900">Penjelasan Video</h2>
             </div>
             <VideoPlayer url={subchapter.videoUrl} />
           </div>
@@ -125,7 +126,7 @@ export default function ContentViewer({ chapter, subchapter, onTextSelection, on
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center space-x-2">
                 <FileQuestion className="text-purple-600" size={24} />
-                <h2 className="text-xl font-bold text-purple-900">Test Your Knowledge</h2>
+                <h2 className="text-xl font-bold text-purple-900">Uji Pengetahuan Anda</h2>
               </div>
               {!showQuiz && (
                 <motion.button
@@ -134,7 +135,7 @@ export default function ContentViewer({ chapter, subchapter, onTextSelection, on
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  Start Quiz
+                  Mula Kuiz
                 </motion.button>
               )}
             </div>
@@ -143,7 +144,7 @@ export default function ContentViewer({ chapter, subchapter, onTextSelection, on
               <QuizComponent quiz={subchapter.quiz} onClose={() => setShowQuiz(false)} />
             ) : (
               <p className="text-gray-600">
-                Test your understanding of {subchapter.title} with {subchapter.quiz.questions.length} questions.
+                Uji kefahaman anda tentang {subchapter.title} dengan {subchapter.quiz.questions.length} soalan.
               </p>
             )}
           </div>
@@ -158,7 +159,7 @@ export default function ContentViewer({ chapter, subchapter, onTextSelection, on
         transition={{ delay: 0.5 }}
       >
         <p className="text-sm text-gray-700">
-          💡 <strong>Tip:</strong> Select any text to get personalized explanations from the AI assistant on the right panel.
+          💡 <strong>Petua:</strong> Pilih mana-mana teks untuk mendapatkan penjelasan peribadi daripada pembantu AI di panel sebelah kanan.
         </p>
       </motion.div>
 
@@ -175,7 +176,7 @@ export default function ContentViewer({ chapter, subchapter, onTextSelection, on
         initial={{ opacity: 0, scale: 0 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.6 }}
-        title="Open Notes"
+        title="Buka Nota"
       >
         <StickyNote size={24} />
       </motion.button>
@@ -209,7 +210,7 @@ export default function ContentViewer({ chapter, subchapter, onTextSelection, on
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <span className="text-sm font-semibold">Check AI Explanation</span>
+                <span className="text-sm font-semibold">Semak Penjelasan AI</span>
                 <ArrowRight size={16} />
               </motion.button>
             </div>
