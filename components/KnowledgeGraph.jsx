@@ -88,9 +88,9 @@ export default function KnowledgeGraph({
 
   // Generate nodes based on expanded chapter
   const { nodes: rawNodes, edges } = useMemo(() => 
-    generateKnowledgeGraphNodes(expandedChapter), 
-    [expandedChapter, nodePositions]
-  )
+  generateKnowledgeGraphNodes(expandedChapter, nodePositions), 
+  [expandedChapter, nodePositions]
+)
 
   // Filter nodes based on search
   const nodes = useMemo(() => {

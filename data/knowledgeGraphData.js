@@ -1,23 +1,25 @@
 import { chaptersData } from './chaptersData'
 
-// Save custom node positions to localStorage
+// Save custom node positions to localStorage (client-side only)
 export const saveNodePositions = (positions) => {
-  localStorage.setItem('knowledgeGraphNodePositions', JSON.stringify(positions))
+  if (typeof window !== 'undefined') {
+    localStorage.setItem('knowledgeGraphNodePositions', JSON.stringify(positions))
+  }
 }
 
-// Load custom node positions from localStorage
+// Load custom node positions from localStorage (client-side only)
 export const loadNodePositions = () => {
-  const saved = localStorage.getItem('knowledgeGraphNodePositions')
-  return saved ? JSON.parse(saved) : {}
+  if (typeof window !== 'undefined') {
+    const saved = localStorage.getItem('knowledgeGraphNodePositions')
+    return saved ? JSON.parse(saved) : {}
+  }
+  return {}
 }
 
 // Generate dynamic nodes based on expanded chapter
-export const generateKnowledgeGraphNodes = (expandedChapterId = null) => {
+export const generateKnowledgeGraphNodes = (expandedChapterId = null, customPositions = {}) => {
   const nodes = []
   const edges = []
-  
-  // Load custom positions
-  const customPositions = loadNodePositions()
   
   // Chapter positions (horizontal layout)
   const chapterSpacing = 400
