@@ -3,7 +3,12 @@
 import { useState, useRef, useEffect } from 'react'
 import ChapterNavigation from '@/components/ChapterNavigation'
 import ContentViewer from '@/components/ContentViewer'
-import AIToolsPanel from '@/components/AIToolsPanel'
+// import AIToolsPanel from '@/components/AIToolsPanel'
+// NEW imports
+import AIToolsPanelEnhanced from '@/components/AIToolsPanelEnhanced'
+import ContentViewerEnhanced from '@/components/ContentViewerEnhanced'
+
+
 import NotesDrawer from '@/components/NotesDrawer'
 //import KnowledgeGraph from '@/components/KnowledgeGraphReactFlow'
 import KnowledgeGraph from '@/components/KnowledgeGraph'
@@ -189,14 +194,24 @@ export default function Home() {
 
         {/* Middle Panel - Content Viewer (Always Visible) */}
         <section className="flex-1 overflow-y-auto custom-scrollbar bg-white">
-          <ContentViewer
+          {/* <ContentViewer
             chapter={activeChapter}
             subchapter={activeSubchapter}
             onTextSelection={handleTextSelection}
             onExplainClick={handleExplainClick}
             onNotesClick={handleNotesClick}
             rightPanelWidth={rightPanelWidth}
-          />
+          /> */}
+
+          <ContentViewerEnhanced
+  chapter={activeChapter}
+  subchapter={activeSubchapter}
+  onTextSelect={handleTextSelection}
+  onExplainClick={handleExplainClick}
+  onNotesClick={handleNotesClick}
+  difficulty={selectedDifficulty} 
+  rightPanelWidth={rightPanelWidth} 
+/>
         </section>
 
         {/* Resize Handle - Desktop Only */}
@@ -219,14 +234,28 @@ export default function Home() {
           style={{ width: `${rightPanelWidth}px` }}
           className="hidden lg:block bg-gray-50 border-l border-gray-200 overflow-y-auto custom-scrollbar flex-shrink-0"
         >
-          <AIToolsPanel
+          {/* <AIToolsPanel
             selectedText={selectedText}
             difficulty={selectedDifficulty}
             onDifficultyChange={setSelectedDifficulty}
             activeTab={activeAITab}
             onTabChange={setActiveAITab}
             triggerExplanation={triggerExplanation}
-          />
+          /> */}
+
+         
+<AIToolsPanelEnhanced
+  selectedText={selectedText}
+  difficulty={selectedDifficulty}
+  onDifficultyChange={setSelectedDifficulty}
+  activeTab={activeAITab}
+  onTabChange={setActiveAITab}
+  triggerExplanation={triggerExplanation}
+  activeChapter={activeChapter}        // ADD THIS
+  activeSubchapter={activeSubchapter}  // ADD THIS
+/>
+
+
         </aside>
       </div>
 
@@ -301,14 +330,16 @@ export default function Home() {
                 </button>
               </div>
 
-              <AIToolsPanel
-                selectedText={selectedText}
-                difficulty={selectedDifficulty}
-                onDifficultyChange={setSelectedDifficulty}
-                activeTab={activeAITab}
-                onTabChange={setActiveAITab}
-                triggerExplanation={triggerExplanation}
-              />
+              <AIToolsPanelEnhanced
+  selectedText={selectedText}
+  difficulty={selectedDifficulty}
+  onDifficultyChange={setSelectedDifficulty}
+  activeTab={activeAITab}
+  onTabChange={setActiveAITab}
+  triggerExplanation={triggerExplanation}
+  activeChapter={activeChapter}        // ADD THIS
+  activeSubchapter={activeSubchapter}  // ADD THIS
+/>
             </motion.div>
           </>
         )}
