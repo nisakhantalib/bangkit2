@@ -3,10 +3,10 @@ import Groq from 'groq-sdk'
 
 // Model selection (SocratiQ strategy)
 const GROQ_MODELS = [
+  'openai/gpt-oss-120b',
   'llama-3.3-70b-versatile',
   'llama-3.1-70b-versatile',
-  'mixtral-8x7b-32768',
-  'gemma2-9b-it',
+  'meta-llama/llama-4-maverick-17b-128e-instruct'
 ]
 
 export async function POST(request) {
@@ -80,7 +80,7 @@ CRITICAL: Return ONLY valid JSON with this EXACT structure (no markdown, no extr
       "question": "Question text here?",
       "options": ["Option A", "Option B", "Option C", "Option D"],
       "correctAnswer": 0,
-      "explanation": "Detailed explanation in Bahasa Malaysia or English"
+      "explanation": "Detailed explanation in Bahasa Malaysia"
     },
     {
       "question": "Question 2?",

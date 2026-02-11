@@ -9,7 +9,7 @@ export default function SubchapterNode({ data }) {
   return (
     <div
       onClick={onClick}
-      className="relative cursor-pointer group"
+      className="relative cursor-text group"
     >
       {/* Warning Badge */}
       {needsFocus && (

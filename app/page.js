@@ -2,9 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import ChapterNavigation from '@/components/ChapterNavigation'
-import ContentViewer from '@/components/ContentViewer'
-// import AIToolsPanel from '@/components/AIToolsPanel'
-// NEW imports
+
 import AIToolsPanelEnhanced from '@/components/AIToolsPanelEnhanced'
 import ContentViewerEnhanced from '@/components/ContentViewerEnhanced'
 
@@ -24,7 +22,7 @@ export default function Home() {
   const [activeAITab, setActiveAITab] = useState('assistant')
   const [notesSheetOpen, setNotesSheetOpen] = useState(false)
   const [triggerExplanation, setTriggerExplanation] = useState(0)
-  const [rightPanelWidth, setRightPanelWidth] = useState(384)
+  const [rightPanelWidth, setRightPanelWidth] = useState(284)
   const [isResizing, setIsResizing] = useState(false)
   const [knowledgeGraphOpen, setKnowledgeGraphOpen] = useState(false)
   

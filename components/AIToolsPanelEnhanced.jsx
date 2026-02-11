@@ -15,7 +15,9 @@ import {
   Loader2
 } from 'lucide-react'
 import DifficultySelector from './DifficultySelector'
-import { retrieveContextForQuery } from '@/public/utils/contentRetrieval'
+import { retrieveContextForQuery } from '@/utils/contentRetrieval'
+import  ReactMarkdown  from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 export default function AIToolsPanelEnhanced({ 
   selectedText, 
@@ -228,7 +230,7 @@ export default function AIToolsPanelEnhanced({
           <Sparkles size={20} />
           <div>
             <h2 className="text-base font-bold">AI Learning Assistant</h2>
-            <p className="text-xs text-primary-100">Powered by Claude AI</p>
+            <p className="text-xs text-primary-100">Your Learning Companion</p>
           </div>
         </div>
       </div>
@@ -329,11 +331,14 @@ export default function AIToolsPanelEnhanced({
                   <div
                     className={`max-w-[85%] rounded-lg px-3 py-2 shadow-sm ${
                       message.type === 'user'
-                        ? 'bg-primary-600 text-white'
+                        ? 'bg-primary-50 text-black'
                         : 'bg-white text-gray-800 border border-gray-200'
                     }`}
                   >
-                    <p className="text-xs leading-relaxed whitespace-pre-wrap">{message.content}</p>
+                    
+                      <ReactMarkdown remarkPlugins={[remarkGfm]} className="markdown-content text-xs leading-relaxed">
+                        {message.content}</ReactMarkdown>
+                   
                   </div>
                 </motion.div>
               ))}

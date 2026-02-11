@@ -14,10 +14,10 @@ const DIFFICULTY_PROMPTS = {
 
 // Model selection based on availability (SocratiQ strategy from Section 5.1)
 const GROQ_MODELS = [
-  'mixtral-8x7b-32768', 
+  'openai/gpt-oss-120b',
   'llama-3.3-70b-versatile',      // Fallback 1
   'llama-3.1-70b-versatile',      // Fallback 2
-  'gemma2-9b-it',                 // Fallback 3
+  'meta-llama/llama-4-maverick-17b-128e-instruct'                 // Fallback 3
 ]
 
 export async function POST(request) {
@@ -58,9 +58,19 @@ Guidelines:
 - Use examples relevant to Malaysian students and contexts
 - Be encouraging and supportive
 - Break down complex concepts into understandable parts
-- If asked about topics beyond the textbook, clearly indicate you're using general knowledge
+- If asked about topics beyond the textbook, clearly indicate you're using general knowledge.
+- If you are citing textbook content, mention that it is sourced from which subchapter.
 - Always aim to deepen understanding, not just provide answers
-- Keep responses concise but informative (aim for 2-4 paragraphs)`
+- Keep responses concise but informative (aim for 2-4 paragraphs)
+- Answer in Bahasa Malaysia where possible, but can use English for complex terms if needed.
+- Ensure responses are complete sentences and do not stop abruptly.
+- You must always format responses using GitHub-flavored Markdown.
+  - Use \`##\` for section headings.
+  - Use **bold** for key terms.
+  - Use bullet points (\`-\`) or numbered lists (\`1.\`) for steps.
+  - Use tables when comparing structured information.
+  - Never output plain text; every response must be properly formatted.
+`
 
     // Build messages array with conversation history
     const messages = [

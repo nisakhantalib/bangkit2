@@ -15,7 +15,7 @@ export default function ContentViewerEnhanced({
   onExplainClick,
   onNotesClick,
   difficulty,
-  rightPanelWidth = 384
+  rightPanelWidth = 284
 }) {
   const [selectedText, setSelectedText] = useState('')
   const [showQuiz, setShowQuiz] = useState(false)
@@ -128,7 +128,7 @@ export default function ContentViewerEnhanced({
           </div>
           
           {/* AI Quiz Generation Button */}
-          <motion.button
+          {/* <motion.button
             onClick={handleGenerateQuiz}
             disabled={isGeneratingQuiz}
             className="ml-4 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-medium text-sm flex items-center space-x-2 hover:from-purple-700 hover:to-pink-700 transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
@@ -146,16 +146,12 @@ export default function ContentViewerEnhanced({
                 <span>Generate AI Quiz</span>
               </>
             )}
-          </motion.button>
+          </motion.button> */}
         </div>
         
         <div className="h-1 w-20 bg-primary-600 rounded-full" />
         
-        {/* Difficulty indicator */}
-        <div className="mt-3 inline-flex items-center space-x-2 px-3 py-1 bg-primary-50 text-primary-700 rounded-full text-xs font-medium">
-          <Sparkles size={12} />
-          <span>AI Level: <span className="capitalize font-bold">{difficulty}</span></span>
-        </div>
+        
       </motion.div>
 
       {/* Video Section */}
@@ -197,27 +193,36 @@ export default function ContentViewerEnhanced({
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
-          <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-6 shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center space-x-2">
-                <FileQuestion className="text-purple-600" size={24} />
-                <h2 className="text-xl font-bold text-purple-900">Test Your Knowledge</h2>
-              </div>
-              {!showQuiz && (
-                <motion.button
-                  onClick={() => {
-                    const quizToShow = quiz || subchapter.quiz
-                    setQuiz(quizToShow)
-                    setShowQuiz(true)
-                  }}
-                  className="px-6 py-2 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  Start Quiz
-                </motion.button>
-              )}
-            </div>
+          <div className="bg-gradient-to-r from-purple-100 to-pink-100 rounded-xl p-6 shadow-sm">
+            <div className="flex items-center mb-4">
+  {/* Left group */}
+  <div className="flex items-center space-x-2">
+    <FileQuestion className="text-purple-600" size={24} />
+    <h2 className="text-xl font-bold text-purple-900">Test Your Knowledge</h2>
+  </div>
+
+  {/* Right element */}
+  <motion.button
+    onClick={handleGenerateQuiz}
+    disabled={isGeneratingQuiz}
+    className="ml-auto px-4 py-2 bg-blue-800 text-white rounded-lg font-medium text-sm flex items-center space-x-2 hover:from-purple-700 hover:to-pink-700 transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+    whileHover={{ scale: 1.02 }}
+    whileTap={{ scale: 0.98 }}
+  >
+    {isGeneratingQuiz ? (
+      <>
+        <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
+        <span>Generating...</span>
+      </>
+    ) : (
+      <>
+        <Brain size={16} />
+        <span>Generate AI Quiz</span>
+      </>
+    )}
+  </motion.button>
+</div>
+
             
             {showQuiz ? (
               <QuizComponent 
@@ -267,53 +272,62 @@ export default function ContentViewerEnhanced({
       </motion.button>
 
      {/* Selection Popup - FIXED: Changed selectedText to highlightedText */}
-              <AnimatePresence>
-                {highlightedText && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 10 }}
-                    className="fixed bottom-24 left-1/2 transform -translate-x-1/2 bg-white rounded-lg shadow-xl p-4 flex items-center space-x-3 border-2 border-primary-200 z-50"
-                  >
-                    <div className="flex items-center space-x-2 text-sm text-gray-600">
-                      <Sparkles size={16} className="text-primary-600" />
-                      <span className="font-medium">Text selected</span>
-                    </div>
-                    <div className="flex space-x-2">
-                      <motion.button
-                        onClick={() => {
-                          onExplainClick()
-                          setHighlightedText('')
-                        }}
-                        className="px-4 py-2 bg-primary-600 text-white rounded-lg text-sm font-medium hover:bg-primary-700 transition-colors"
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        Explain with AI
-                      </motion.button>
-                      <motion.button
-                        onClick={() => {
-                          onNotesClick()
-                          setHighlightedText('')
-                        }}
-                        className="px-4 py-2 bg-yellow-500 text-white rounded-lg text-sm font-medium hover:bg-yellow-600 transition-colors"
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        Add to Notes
-                      </motion.button>
-                      <motion.button
-                        onClick={() => setHighlightedText('')}
-                        className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-300 transition-colors"
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        Cancel
-                      </motion.button>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+           <AnimatePresence>
+  {highlightedText && (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 10 }}
+      transition={{ duration: 0.2 }}
+      style={{
+        position: 'fixed',
+        left: `${selectionPosition.x}px`,
+        top: `${selectionPosition.y - 80}px`, // adjust offset as needed
+        transform: 'translateX(-50%)',
+        zIndex: 50
+      }}
+      className="bg-white rounded-lg shadow-xl p-4 flex items-center space-x-3 border-2 border-primary-200"
+    >
+      <div className="flex items-center space-x-2 text-sm text-gray-600">
+        <Sparkles size={16} className="text-primary-600" />
+        <span className="font-medium">Text selected</span>
+      </div>
+      <div className="flex space-x-2">
+        <motion.button
+          onClick={() => {
+            onExplainClick()
+            setHighlightedText('')
+          }}
+          className="px-4 py-2 bg-primary-600 text-white rounded-lg text-sm font-medium hover:bg-primary-700 transition-colors"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          Explain with AI
+        </motion.button>
+        <motion.button
+          onClick={() => {
+            onNotesClick()
+            setHighlightedText('')
+          }}
+          className="px-4 py-2 bg-yellow-500 text-white rounded-lg text-sm font-medium hover:bg-yellow-600 transition-colors"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          Add to Notes
+        </motion.button>
+        <motion.button
+          onClick={() => setHighlightedText('')}
+          className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-300 transition-colors"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          Cancel
+        </motion.button>
+      </div>
+    </motion.div>
+  )}
+</AnimatePresence>
+
     </div>
   )
 }
