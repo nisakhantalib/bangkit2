@@ -1,81 +1,97 @@
 import { chaptersData } from './chaptersData'
 
-// Generate nodes from your actual chapter data
-export const generateKnowledgeGraphNodes = () => {
+// Save custom node positions to localStorage
+export const saveNodePositions = (positions) => {
+  localStorage.setItem('knowledgeGraphNodePositions', JSON.stringify(positions))
+}
+
+// Load custom node positions from localStorage
+export const loadNodePositions = () => {
+  const saved = localStorage.getItem('knowledgeGraphNodePositions')
+  return saved ? JSON.parse(saved) : {}
+}
+
+// Generate dynamic nodes based on expanded chapter
+export const generateKnowledgeGraphNodes = (expandedChapterId = null) => {
   const nodes = []
   const edges = []
   
-  // Chapter positions (central nodes)
-  const chapterPositions = [
-    { x: 250, y: 300 },  // Chapter 1
-    { x: 600, y: 300 },  // Chapter 2
-    { x: 950, y: 300 },  // Chapter 3
-  ]
+  // Load custom positions
+  const customPositions = loadNodePositions()
   
+  // Chapter positions (horizontal layout)
+  const chapterSpacing = 400
+  const startX = 200
+  const centerY = 350
+
   chaptersData.forEach((chapter, chapterIndex) => {
-    const chapterPos = chapterPositions[chapterIndex]
-    
-    // Add main chapter node (large central node)
+    const chapterX = startX + chapterIndex * chapterSpacing
+    const chapterY = centerY
+    const isExpanded = expandedChapterId === chapter.id
+    const nodeId = `chapter-${chapter.id}`
+
+    // Use custom position if available, otherwise use default
+    const position = customPositions[nodeId] || { x: chapterX, y: chapterY }
+
+    // Chapter node (always visible)
     nodes.push({
-      id: `chapter-${chapter.id}`,
-      label: `${chapter.title}`,
+      id: nodeId,
+      label: `Chapter ${chapter.id}`,
+      secondaryLabel: chapter.title,
       icon: chapter.icon,
       type: 'chapter',
       chapterId: chapter.id,
-      x: chapterPos.x,
-      y: chapterPos.y
+      x: position.x,
+      y: position.y,
+      isExpanded: isExpanded
     })
-    
-    // Add subchapter nodes around the chapter
-    const subchapterCount = chapter.subchapters.length
-    const radius = 180 // Distance from chapter center
-    const angleStep = (2 * Math.PI) / subchapterCount
-    
-    chapter.subchapters.forEach((subchapter, subIndex) => {
-      const angle = angleStep * subIndex - Math.PI / 2 // Start from top
-      const x = chapterPos.x + radius * Math.cos(angle)
-      const y = chapterPos.y + radius * Math.sin(angle)
-      
-      // Add subchapter node
-      const nodeId = `sub-${chapter.id}-${subchapter.id}`
-      nodes.push({
-        id: nodeId,
-        label: subchapter.title,
-        type: 'subchapter',
-        chapterId: chapter.id,
-        subchapterId: subchapter.id,
-        x: x,
-        y: y
+
+    // Only show subchapters if this chapter is expanded
+    if (isExpanded) {
+      const subchapterRadius = 200
+      const itemCount = chapter.subchapters.length
+
+      chapter.subchapters.forEach((subchapter, subIndex) => {
+        const angle = (2 * Math.PI * subIndex) / itemCount - Math.PI / 2
+        const defaultSubX = position.x + subchapterRadius * Math.cos(angle)
+        const defaultSubY = position.y + subchapterRadius * Math.sin(angle)
+
+        const nodeId = `sub-${chapter.id}-${subchapter.id}`
+        const subPosition = customPositions[nodeId] || { x: defaultSubX, y: defaultSubY }
+
+        nodes.push({
+          id: nodeId,
+          label: subchapter.title,
+          type: 'subchapter',
+          chapterId: chapter.id,
+          subchapterId: subchapter.id,
+          x: subPosition.x,
+          y: subPosition.y
+        })
+
+        // Connect to chapter
+        edges.push({
+          source: `chapter-${chapter.id}`,
+          target: nodeId
+        })
       })
-      
-      // Connect subchapter to chapter
-      edges.push({
-        source: `chapter-${chapter.id}`,
-        target: nodeId
-      })
+    }
+  })
+
+  // Add inter-chapter connections
+  for (let i = 0; i < chaptersData.length - 1; i++) {
+    edges.push({
+      source: `chapter-${chaptersData[i].id}`,
+      target: `chapter-${chaptersData[i + 1].id}`,
+      style: 'dashed',
+      isChapterConnection: true
     })
-  })
-  
-  // Add cross-chapter connections (based on content relationships)
-  // Example: Kulat (Ch1) relates to Gizi (Ch2)
-  edges.push({
-    source: 'sub-1-1.4',  // 1.4 would be Kulat/Fungi
-    target: 'sub-2-2.1',  // 2.1 Gizi Seimbang
-    style: 'dashed',
-    label: 'sumber makanan'
-  })
-  
-  edges.push({
-    source: 'sub-2-2.2',  // 2.2 Teknologi Makanan
-    target: 'sub-3-3.1',  // 3.1 Kitaran Hayat
-    style: 'dashed',
-    label: 'impak'
-  })
-  
+  }
+
   return { nodes, edges }
 }
 
-// Progress levels (like the sample image)
+// Progress levels
 export const progressLevels = {
   completed: { percent: 100, color: '#10b981', label: '100% Completed' },
   tested: { percent: 66, color: '#fbbf24', label: '66% Tested' },
