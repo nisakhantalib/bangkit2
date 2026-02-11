@@ -5,8 +5,10 @@ import ChapterNavigation from '@/components/ChapterNavigation'
 import ContentViewer from '@/components/ContentViewer'
 import AIToolsPanel from '@/components/AIToolsPanel'
 import NotesDrawer from '@/components/NotesDrawer'
+import KnowledgeGraph from '@/components/KnowledgeGraphReactFlow'
+// import KnowledgeGraph from '@/components/KnowledgeGraph'
 import { chaptersData } from '@/data/chaptersData'
-import { GripVertical, Menu, X, Sparkles } from 'lucide-react'
+import { GripVertical, Menu, X, Sparkles, MapPin } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 export default function Home() {
@@ -19,6 +21,7 @@ export default function Home() {
   const [triggerExplanation, setTriggerExplanation] = useState(0)
   const [rightPanelWidth, setRightPanelWidth] = useState(384)
   const [isResizing, setIsResizing] = useState(false)
+  const [knowledgeGraphOpen, setKnowledgeGraphOpen] = useState(false)
   
   // Mobile/Tablet states
   const [mobileChaptersOpen, setMobileChaptersOpen] = useState(false)
@@ -57,6 +60,26 @@ export default function Home() {
     setActiveSubchapter(subchapter)
     // Close mobile menu after selection
     setMobileChaptersOpen(false)
+  }
+
+  // Handle navigation from knowledge graph
+  const handleGraphNavigate = (chapterNumber, subchapterId) => {
+    const chapter = chaptersData[chapterNumber - 1]
+    if (chapter) {
+      setActiveChapter(chapter)
+      
+      if (subchapterId) {
+        // Find and navigate to specific subchapter
+        const subchapter = chapter.subchapters.find(sub => sub.id === subchapterId)
+        if (subchapter) {
+          setActiveSubchapter(subchapter)
+        } else {
+          setActiveSubchapter(chapter.subchapters[0])
+        }
+      } else {
+        setActiveSubchapter(chapter.subchapters[0])
+      }
+    }
   }
 
   // Resize handlers (Desktop only)
@@ -118,7 +141,7 @@ export default function Home() {
             </div>
             <div>
               <h1 className="text-lg md:text-2xl font-bold">Bangkit</h1>
-              <p className="text-primary-200 text-xs md:text-sm hidden sm:block">Sains Tingkatan 5 - Pembelajaran Berteraskan AI</p>
+              <p className="text-primary-200 text-xs md:text-sm hidden sm:block">Science Form 5 - AI-Powered Learning</p>
             </div>
           </div>
           
@@ -131,9 +154,18 @@ export default function Home() {
               <Sparkles size={24} />
             </button>
 
+            {/* Knowledge Graph Button */}
+            <button
+              onClick={() => setKnowledgeGraphOpen(true)}
+              className="hidden md:flex items-center space-x-2 px-3 md:px-4 py-2 bg-primary-500 hover:bg-primary-400 rounded-lg transition-colors"
+            >
+              <MapPin size={18} />
+              <span className="text-xs md:text-sm font-medium">Knowledge Graph</span>
+            </button>
+
             <div className="text-right hidden sm:block">
-              <p className="text-xs md:text-sm font-medium">Selamat kembali!</p>
-              <p className="text-xs text-primary-200 hidden md:block">Teruskan pembelajaran anda</p>
+              <p className="text-xs md:text-sm font-medium">Welcome back!</p>
+              <p className="text-xs text-primary-200 hidden md:block">Continue your learning journey</p>
             </div>
             <div className="w-8 h-8 md:w-10 md:h-10 bg-primary-500 rounded-full flex items-center justify-center font-semibold text-xs md:text-base">
               MR
@@ -202,7 +234,6 @@ export default function Home() {
       <AnimatePresence>
         {mobileChaptersOpen && (
           <>
-            {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -211,7 +242,6 @@ export default function Home() {
               className="lg:hidden fixed inset-0 bg-black/50 z-40"
             />
 
-            {/* Drawer */}
             <motion.div
               initial={{ x: '-100%' }}
               animate={{ x: 0 }}
@@ -219,9 +249,8 @@ export default function Home() {
               transition={{ type: 'spring', damping: 30, stiffness: 300 }}
               className="lg:hidden fixed left-0 top-0 h-full w-80 max-w-[85vw] bg-white shadow-2xl z-50 flex flex-col"
             >
-              {/* Drawer Header */}
               <div className="bg-primary-700 text-white p-4 flex items-center justify-between">
-                <h2 className="text-lg font-bold">Kandungan Kursus</h2>
+                <h2 className="text-lg font-bold">Course Content</h2>
                 <button
                   onClick={() => setMobileChaptersOpen(false)}
                   className="p-2 hover:bg-primary-600 rounded-lg transition-colors"
@@ -230,7 +259,6 @@ export default function Home() {
                 </button>
               </div>
 
-              {/* Drawer Content */}
               <div className="flex-1 overflow-y-auto">
                 <ChapterNavigation
                   chapters={chaptersData}
@@ -249,7 +277,6 @@ export default function Home() {
       <AnimatePresence>
         {mobileAIOpen && (
           <>
-            {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -258,7 +285,6 @@ export default function Home() {
               className="lg:hidden fixed inset-0 bg-black/50 z-40"
             />
 
-            {/* Drawer */}
             <motion.div
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
@@ -266,7 +292,6 @@ export default function Home() {
               transition={{ type: 'spring', damping: 30, stiffness: 300 }}
               className="lg:hidden fixed right-0 top-0 h-full w-96 max-w-[90vw] bg-white shadow-2xl z-50 flex flex-col"
             >
-              {/* Close Button */}
               <div className="absolute top-4 right-4 z-10">
                 <button
                   onClick={() => setMobileAIOpen(false)}
@@ -276,7 +301,6 @@ export default function Home() {
                 </button>
               </div>
 
-              {/* AI Panel Content */}
               <AIToolsPanel
                 selectedText={selectedText}
                 difficulty={selectedDifficulty}
@@ -296,6 +320,15 @@ export default function Home() {
         onClose={() => setNotesSheetOpen(false)}
         chapter={activeChapter}
         subchapter={activeSubchapter}
+      />
+
+      {/* Knowledge Graph Modal */}
+      <KnowledgeGraph
+        isOpen={knowledgeGraphOpen}
+        onClose={() => setKnowledgeGraphOpen(false)}
+        onNavigate={handleGraphNavigate}
+        currentChapter={activeChapter}
+        currentSubchapter={activeSubchapter}
       />
     </main>
   )

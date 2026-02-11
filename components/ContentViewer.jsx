@@ -114,43 +114,48 @@ export default function ContentViewer({ chapter, subchapter, onTextSelection, on
         </motion.div>
       )}
 
+     
       {/* Quiz Section */}
-      {subchapter.quiz && (
-        <motion.div
-          className="mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-        >
-          <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-6 shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center space-x-2">
-                <FileQuestion className="text-purple-600" size={24} />
-                <h2 className="text-xl font-bold text-purple-900">Uji Pengetahuan Anda</h2>
-              </div>
-              {!showQuiz && (
-                <motion.button
-                  onClick={() => setShowQuiz(true)}
-                  className="px-6 py-2 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  Mula Kuiz
-                </motion.button>
-              )}
-            </div>
-            
-            {showQuiz ? (
-              <QuizComponent quiz={subchapter.quiz} onClose={() => setShowQuiz(false)} />
-            ) : (
-              <p className="text-gray-600">
-                Uji kefahaman anda tentang {subchapter.title} dengan {subchapter.quiz.questions.length} soalan.
-              </p>
-            )}
-          </div>
-        </motion.div>
+{subchapter.quiz && (
+  <motion.div
+    className="mb-12"
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay: 0.4 }}
+  >
+    <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-6 shadow-sm">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center space-x-2">
+          <FileQuestion className="text-purple-600" size={24} />
+          <h2 className="text-xl font-bold text-purple-900">Test Your Knowledge</h2>
+        </div>
+        {!showQuiz && (
+          <motion.button
+            onClick={() => setShowQuiz(true)}
+            className="px-6 py-2 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            Start Quiz
+          </motion.button>
+        )}
+      </div>
+      
+      {showQuiz ? (
+        <QuizComponent 
+          quiz={subchapter.quiz} 
+          onClose={() => setShowQuiz(false)}
+          chapter={chapter}
+          subchapter={subchapter}
+        />
+      ) : (
+        <p className="text-gray-600">
+          Test your understanding of {subchapter.title} with {subchapter.quiz.questions.length} questions.
+        </p>
       )}
-
+    </div>
+  </motion.div>
+)}
       {/* Navigation Hint */}
       <motion.div
         className="mt-12 p-4 bg-blue-50 border-l-4 border-primary-600 rounded"
