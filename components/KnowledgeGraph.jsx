@@ -430,12 +430,12 @@ export default function KnowledgeGraph({
                       const quizNodeId = `quiz-${node.chapterId}`
                       const status = getNodeStatus(quizNodeId)
                       color = getNodeColor(status)
-                      displayText = nodeProgress.quizScore ? `${nodeProgress.quizScore}%` : null
+                      displayText = nodeProgress.quizScore !== undefined ? `${nodeProgress.quizScore}%` : null
                     } else {
                       radius = 45
                       const status = getNodeStatus(node.id)
                       color = getNodeColor(status)
-                      displayText = nodeProgress.quizScore ? `${nodeProgress.quizScore}%` : null
+                      displayText = nodeProgress.quizScore !== undefined ? `${nodeProgress.quizScore}%` : null
                     }
 
                     const needsFocus = nodeProgress.quizAttempted && !nodeProgress.quizPassed && nodeProgress.quizScore < 60
@@ -644,7 +644,7 @@ export default function KnowledgeGraph({
               </motion.div>
 
               {/* Focus Alert */}
-              {stats.needsReview > 0 && (
+              {/* {stats.needsReview > 0 && (
                 <motion.div
                   initial={{ x: -300, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
@@ -663,7 +663,7 @@ export default function KnowledgeGraph({
                     </div>
                   </div>
                 </motion.div>
-              )}
+              )} */}
             </div>
           </motion.div>
         </div>
