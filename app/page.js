@@ -2,8 +2,11 @@
 
 import { useState, useRef, useEffect } from 'react'
 import ChapterNavigation from '@/components/ChapterNavigation'
-import ContentViewer from '@/components/ContentViewer'
-import AIToolsPanel from '@/components/AIToolsPanel'
+
+import AIToolsPanelEnhanced from '@/components/AIToolsPanelEnhanced'
+import ContentViewerEnhanced from '@/components/ContentViewerEnhanced'
+
+
 import NotesDrawer from '@/components/NotesDrawer'
 //import KnowledgeGraph from '@/components/KnowledgeGraphReactFlow'
 import KnowledgeGraph from '@/components/KnowledgeGraph'
@@ -19,7 +22,7 @@ export default function Home() {
   const [activeAITab, setActiveAITab] = useState('assistant')
   const [notesSheetOpen, setNotesSheetOpen] = useState(false)
   const [triggerExplanation, setTriggerExplanation] = useState(0)
-  const [rightPanelWidth, setRightPanelWidth] = useState(384)
+  const [rightPanelWidth, setRightPanelWidth] = useState(284)
   const [isResizing, setIsResizing] = useState(false)
   const [knowledgeGraphOpen, setKnowledgeGraphOpen] = useState(false)
   
@@ -141,7 +144,7 @@ export default function Home() {
             </div>
             <div>
               <h1 className="text-lg md:text-2xl font-bold">Bangkit</h1>
-              <p className="text-primary-200 text-xs md:text-sm hidden sm:block">Science Form 5 - AI-Powered Learning</p>
+              <p className="text-primary-200 text-xs md:text-sm hidden sm:block">Pembelajaran Berteraskan AI</p>
             </div>
           </div>
           
@@ -164,8 +167,8 @@ export default function Home() {
             </button>
 
             <div className="text-right hidden sm:block">
-              <p className="text-xs md:text-sm font-medium">Welcome back!</p>
-              <p className="text-xs text-primary-200 hidden md:block">Continue your learning journey</p>
+              <p className="text-xs md:text-sm font-medium">Selamat Datang!</p>
+              <p className="text-xs text-primary-200 hidden md:block">Teruskan pembelajaran anda</p>
             </div>
             <div className="w-8 h-8 md:w-10 md:h-10 bg-primary-500 rounded-full flex items-center justify-center font-semibold text-xs md:text-base">
               MR
@@ -189,14 +192,24 @@ export default function Home() {
 
         {/* Middle Panel - Content Viewer (Always Visible) */}
         <section className="flex-1 overflow-y-auto custom-scrollbar bg-white">
-          <ContentViewer
+          {/* <ContentViewer
             chapter={activeChapter}
             subchapter={activeSubchapter}
             onTextSelection={handleTextSelection}
             onExplainClick={handleExplainClick}
             onNotesClick={handleNotesClick}
             rightPanelWidth={rightPanelWidth}
-          />
+          /> */}
+
+          <ContentViewerEnhanced
+  chapter={activeChapter}
+  subchapter={activeSubchapter}
+  onTextSelect={handleTextSelection}
+  onExplainClick={handleExplainClick}
+  onNotesClick={handleNotesClick}
+  difficulty={selectedDifficulty} 
+  rightPanelWidth={rightPanelWidth} 
+/>
         </section>
 
         {/* Resize Handle - Desktop Only */}
@@ -219,14 +232,29 @@ export default function Home() {
           style={{ width: `${rightPanelWidth}px` }}
           className="hidden lg:block bg-gray-50 border-l border-gray-200 overflow-y-auto custom-scrollbar flex-shrink-0"
         >
-          <AIToolsPanel
+          {/* <AIToolsPanel
             selectedText={selectedText}
             difficulty={selectedDifficulty}
             onDifficultyChange={setSelectedDifficulty}
             activeTab={activeAITab}
             onTabChange={setActiveAITab}
             triggerExplanation={triggerExplanation}
-          />
+          /> */}
+
+         
+<AIToolsPanelEnhanced
+  selectedText={selectedText}
+  difficulty={selectedDifficulty}
+  onDifficultyChange={setSelectedDifficulty}
+  activeTab={activeAITab}
+  onTabChange={setActiveAITab}
+  triggerExplanation={triggerExplanation}
+  activeChapter={activeChapter}        
+  activeSubchapter={activeSubchapter}  
+  chaptersData={chaptersData}  
+/>
+
+
         </aside>
       </div>
 
@@ -250,7 +278,7 @@ export default function Home() {
               className="lg:hidden fixed left-0 top-0 h-full w-80 max-w-[85vw] bg-white shadow-2xl z-50 flex flex-col"
             >
               <div className="bg-primary-700 text-white p-4 flex items-center justify-between">
-                <h2 className="text-lg font-bold">Course Content</h2>
+                <h2 className="text-lg font-bold">Isi Kandungan</h2>
                 <button
                   onClick={() => setMobileChaptersOpen(false)}
                   className="p-2 hover:bg-primary-600 rounded-lg transition-colors"
@@ -301,14 +329,16 @@ export default function Home() {
                 </button>
               </div>
 
-              <AIToolsPanel
-                selectedText={selectedText}
-                difficulty={selectedDifficulty}
-                onDifficultyChange={setSelectedDifficulty}
-                activeTab={activeAITab}
-                onTabChange={setActiveAITab}
-                triggerExplanation={triggerExplanation}
-              />
+              <AIToolsPanelEnhanced
+  selectedText={selectedText}
+  difficulty={selectedDifficulty}
+  onDifficultyChange={setSelectedDifficulty}
+  activeTab={activeAITab}
+  onTabChange={setActiveAITab}
+  triggerExplanation={triggerExplanation}
+  activeChapter={activeChapter}        
+  activeSubchapter={activeSubchapter}  
+/>
             </motion.div>
           </>
         )}
