@@ -16,7 +16,7 @@ import {
 } from 'lucide-react'
 import DifficultySelector from './DifficultySelector'
 import { retrieveContextForQuery } from '@/utils/contentRetrieval'
-import  ReactMarkdown  from 'react-markdown'
+import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
 export default function AIToolsPanelEnhanced({ 
@@ -27,7 +27,8 @@ export default function AIToolsPanelEnhanced({
   onTabChange, 
   triggerExplanation,
   activeChapter,
-  activeSubchapter 
+  activeSubchapter,
+  chaptersData   // 🔴 NEW PROP
 }) {
   const [chatMessages, setChatMessages] = useState([
     {
@@ -40,6 +41,7 @@ export default function AIToolsPanelEnhanced({
   const [difficultyExpanded, setDifficultyExpanded] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const chatEndRef = useRef(null)
+  const chatContainerRef = useRef(null)
   
   const [internalTab, setInternalTab] = useState('assistant')
   const currentTab = activeTab || internalTab
@@ -52,9 +54,19 @@ export default function AIToolsPanelEnhanced({
     }
   }
 
-  // Auto-scroll to bottom when new messages arrive
+  // Auto-scroll to bottom when new messages arrive (only if user is near bottom)
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    const container = chatContainerRef.current
+    if (!container) return
+
+    const isNearBottom =
+      container.scrollHeight - container.scrollTop - container.clientHeight < 100
+
+    if (isNearBottom) {
+      requestAnimationFrame(() => {
+        chatEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
+      })
+    }
   }, [chatMessages])
 
   // Auto-trigger explanation when triggerExplanation changes
@@ -64,19 +76,21 @@ export default function AIToolsPanelEnhanced({
     }
   }, [triggerExplanation])
 
-  // Function to call AI API with bounded learning
+  // Function to call AI API with TF-IDF context
   const callAIAPI = async (userMessage) => {
     try {
       setIsLoading(true)
 
-      // Implement bounded learning: retrieve relevant content from chapter
       let context = ''
-      if (activeChapter) {
+
+      if (chaptersData) {
         context = retrieveContextForQuery(
-          userMessage, 
-          activeChapter, 
-          3 // top 3 most relevant paragraphs
+          userMessage,
+          chaptersData,
+          { topK: 3 }
         )
+
+        console.log('🧠 Retrieved context:', context)
       }
 
       const response = await fetch('/api/chat', {
@@ -88,7 +102,7 @@ export default function AIToolsPanelEnhanced({
           message: userMessage,
           difficulty: difficulty,
           context: context,
-          conversationHistory: chatMessages.slice(1) // Exclude initial greeting
+          conversationHistory: chatMessages.slice(1)
         })
       })
 
@@ -116,10 +130,9 @@ export default function AIToolsPanelEnhanced({
       content: inputMessage
     }
 
-    setChatMessages([...chatMessages, newMessage])
+    setChatMessages(prev => [...prev, newMessage])
     setInputMessage('')
 
-    // Call AI API
     const aiResponse = await callAIAPI(inputMessage)
     
     const aiMessage = {
@@ -141,7 +154,6 @@ export default function AIToolsPanelEnhanced({
 
     setChatMessages(prev => [...prev, explanationRequest])
 
-    // Call AI API with selected text
     const aiResponse = await callAIAPI(
       `Please explain this concept at a ${difficulty} level: "${selectedText}"`
     )
@@ -174,7 +186,6 @@ export default function AIToolsPanelEnhanced({
     }
     setChatMessages(prev => [...prev, aiMessage])
     
-    // Switch to assistant tab to show results
     handleTabChange('assistant')
   }
 
@@ -320,7 +331,7 @@ export default function AIToolsPanelEnhanced({
             )}
 
             {/* Chat Messages */}
-            <div className="flex-1 overflow-y-auto p-3 space-y-2 custom-scrollbar bg-gray-50 min-h-0">
+            <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-3 space-y-2 custom-scrollbar bg-gray-50 min-h-0">
               {chatMessages.map((message) => (
                 <motion.div
                   key={message.id}
@@ -335,10 +346,9 @@ export default function AIToolsPanelEnhanced({
                         : 'bg-white text-gray-800 border border-gray-200'
                     }`}
                   >
-                    
-                      <ReactMarkdown remarkPlugins={[remarkGfm]} className="markdown-content text-xs leading-relaxed">
-                        {message.content}</ReactMarkdown>
-                   
+                    <ReactMarkdown remarkPlugins={[remarkGfm]} className="markdown-content text-xs leading-relaxed">
+                      {message.content}
+                    </ReactMarkdown>
                   </div>
                 </motion.div>
               ))}

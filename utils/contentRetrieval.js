@@ -1,158 +1,207 @@
 /**
- * Content Retrieval Service
- * Implements SocratiQ's "Bounded Learning" strategy using fuzzy matching
- * Based on Algorithm 1 from the paper: Fingerprinting + Levenshtein Distance
+ * Content Retrieval Service - TF-IDF (Global + LaTeX/Formula-Aware)
+ *
+ * Architecture:
+ * User Query → Entire Textbook → AI Context
  */
 
-// Calculate fingerprint (average ASCII value)
-function calculateFingerprint(text) {
-  if (!text || text.length === 0) return 0
-  
-  let sum = 0
-  for (let i = 0; i < text.length; i++) {
-    sum += text.charCodeAt(i)
-  }
-  return sum / text.length
-}
+// ---------------------------
+// Utility Functions
+// ---------------------------
 
-// Preprocess text: remove punctuation, convert to lowercase
+// Preprocess text: lowercase + preserve math/LaTeX symbols
 function preprocessText(text) {
   return text
     .toLowerCase()
-    .replace(/[^\w\s]/g, '')
-    .trim()
+    // keep math symbols and LaTeX characters
+    .replace(/[^\w\s=×\/\+\-\(\)\{\}\^\_\\]/g, "")
+    .trim();
 }
 
-// Calculate Levenshtein distance (edit distance)
-function levenshteinDistance(str1, str2) {
-  const m = str1.length
-  const n = str2.length
-  const dp = Array(m + 1).fill(null).map(() => Array(n + 1).fill(0))
+// Cosine similarity
+function cosineSimilarity(a, b) {
+  let dot = 0,
+    normA = 0,
+    normB = 0;
+  for (let i = 0; i < a.length; i++) {
+    dot += a[i] * b[i];
+    normA += a[i] * a[i];
+    normB += b[i] * b[i];
+  }
+  return normA && normB ? dot / (Math.sqrt(normA) * Math.sqrt(normB)) : 0;
+}
 
-  for (let i = 0; i <= m; i++) dp[i][0] = i
-  for (let j = 0; j <= n; j++) dp[0][j] = j
+// ---------------------------
+// Vocabulary + TF-IDF Helpers
+// ---------------------------
 
-  for (let i = 1; i <= m; i++) {
-    for (let j = 1; j <= n; j++) {
-      if (str1[i - 1] === str2[j - 1]) {
-        dp[i][j] = dp[i - 1][j - 1]
-      } else {
-        dp[i][j] = Math.min(
-          dp[i - 1][j] + 1,     // deletion
-          dp[i][j - 1] + 1,     // insertion
-          dp[i - 1][j - 1] + 1  // substitution
-        )
-      }
+function buildVocabulary(textMap) {
+  const vocabMap = new Map();
+  textMap.forEach((entry) => {
+    const words = preprocessText(entry.text).split(/\s+/);
+    words.forEach((w) => {
+      if (!vocabMap.has(w)) vocabMap.set(w, vocabMap.size);
+    });
+  });
+  console.log(`📖 Vocabulary size: ${vocabMap.size}`);
+  return vocabMap;
+}
+
+function computeDocFreq(textMap, vocabMap) {
+  const df = new Array(vocabMap.size).fill(0);
+  textMap.forEach((entry) => {
+    const uniqueWords = new Set(preprocessText(entry.text).split(/\s+/));
+    uniqueWords.forEach((w) => {
+      const idx = vocabMap.get(w);
+      if (idx !== undefined) df[idx] += 1;
+    });
+  });
+  console.log("📊 Document frequencies computed");
+  return df;
+}
+
+function textToTFIDFVector(text, vocabMap, df, N) {
+  const vec = new Array(vocabMap.size).fill(0);
+  const words = preprocessText(text).split(/\s+/);
+  const counts = {};
+  words.forEach((w) => (counts[w] = (counts[w] || 0) + 1));
+
+  for (const [w, idx] of vocabMap.entries()) {
+    if (counts[w]) {
+      const tf = counts[w] / words.length;
+      const idf = Math.log(N / (df[idx] || 1));
+      vec[idx] = tf * idf;
     }
   }
-
-  return dp[m][n]
+  return vec;
 }
 
-// Calculate similarity score
-function calculateSimilarity(query, candidate) {
-  const distance = levenshteinDistance(query, candidate)
-  const maxLength = Math.max(query.length, candidate.length)
-  return 1 - (distance / maxLength)
+// ---------------------------
+// Formula Detection Helper
+// ---------------------------
+
+function containsFormula(text) {
+  return /[=×\/\+\-\^\\]/.test(text) || /\\sum|_i|EF_i|A_i/.test(text);
 }
 
-// Create text map with fingerprints from chapter content
+// ---------------------------
+// Build Text Maps
+// ---------------------------
+
 export function createTextMap(chapter) {
-  const textMap = []
-  
-  // Process main content
+  const textMap = [];
+
   if (chapter.content) {
-    const paragraphs = chapter.content.split('\n\n').filter(p => p.trim().length > 0)
-    
-    paragraphs.forEach((paragraph, index) => {
-      const processed = preprocessText(paragraph)
-      if (processed.length > 20) { // Only include substantial paragraphs
-        textMap.push({
-          id: `ch${chapter.id}-p${index}`,
-          text: paragraph,
-          processedText: processed,
-          fingerprint: calculateFingerprint(processed),
-          type: 'paragraph'
-        })
-      }
-    })
+    const paragraphs = chapter.content.split("\n\n").filter((p) => p.trim().length > 0);
+    paragraphs.forEach((para, idx) => {
+      if (para.length < 10) return;
+      textMap.push({
+        id: `ch${chapter.id}-p${idx}`,
+        chapterId: chapter.id,
+        text: para,
+        chapterTitle: chapter.title,
+      });
+    });
   }
 
-  // Process subchapters
   if (chapter.subchapters) {
-    chapter.subchapters.forEach((subchapter) => {
-      if (subchapter.content) {
-        const paragraphs = subchapter.content.split('\n\n').filter(p => p.trim().length > 0)
-        
-        paragraphs.forEach((paragraph, index) => {
-          const processed = preprocessText(paragraph)
-          if (processed.length > 20) {
-            textMap.push({
-              id: `ch${chapter.id}-sub${subchapter.id}-p${index}`,
-              text: paragraph,
-              processedText: processed,
-              fingerprint: calculateFingerprint(processed),
-              type: 'subchapter',
-              subchapterTitle: subchapter.title
-            })
-          }
-        })
-      }
-    })
+    chapter.subchapters.forEach((sub) => {
+      if (!sub.content) return;
+      const paras = sub.content.split("\n\n").filter((p) => p.trim().length > 0);
+      paras.forEach((para, idx) => {
+        if (para.length < 10) return;
+        textMap.push({
+          id: `ch${chapter.id}-sub${sub.id}-p${idx}`,
+          chapterId: chapter.id,
+          text: para,
+          chapterTitle: chapter.title,
+          subchapterTitle: sub.title,
+        });
+      });
+    });
   }
 
-  // Sort by fingerprint for binary search optimization
-  return textMap.sort((a, b) => a.fingerprint - b.fingerprint)
+  console.log(`📦 Built text map for chapter ${chapter.id}: ${textMap.length} paragraphs`);
+  return textMap;
 }
 
-// Find most similar paragraphs to query
-export function findRelevantContent(query, textMap, topK = 3) {
-  const processedQuery = preprocessText(query)
-  const queryFingerprint = calculateFingerprint(processedQuery)
-
-  // Find candidates with similar fingerprints (binary search neighbors)
-  const candidates = []
-  
-  // Simple approach: calculate similarity with all entries
-  // In production, you'd optimize with binary search + neighbors
-  textMap.forEach(entry => {
-    const similarity = calculateSimilarity(processedQuery, entry.processedText)
-    candidates.push({
-      ...entry,
-      similarity
-    })
-  })
-
-  // Sort by similarity and return top K
-  return candidates
-    .sort((a, b) => b.similarity - a.similarity)
-    .slice(0, topK)
+export function createTextMapFromAllChapters(chaptersData) {
+  let fullMap = [];
+  for (const chapter of Object.values(chaptersData)) {
+    fullMap = fullMap.concat(createTextMap(chapter));
+  }
+  console.log(`📦 Full textbook text map: ${fullMap.length} paragraphs`);
+  return fullMap;
 }
 
-// Create context from relevant content for AI prompt
+// ---------------------------
+// TF-IDF Retrieval (Global + Formula Boost)
+// ---------------------------
+
+export function findTopKTFIDF(query, textMap, topK = 3) {
+  const vocabMap = buildVocabulary(textMap);
+  const df = computeDocFreq(textMap, vocabMap);
+  const N = textMap.length;
+
+  const vectors = textMap.map((entry) =>
+    textToTFIDFVector(entry.text, vocabMap, df, N)
+  );
+  const queryVec = textToTFIDFVector(query, vocabMap, df, N);
+
+  const scored = textMap.map((entry, idx) => {
+    let sim = cosineSimilarity(queryVec, vectors[idx]);
+    // Boost formula relevance if query mentions formula or symbols
+    if (containsFormula(entry.text) && /formula|pengiraan|equation|=|×|\\sum/.test(query)) {
+      sim *= 2.0;
+    }
+    console.log(`🔹 Similarity for paragraph ${entry.id}:`, sim.toFixed(4));
+    return { ...entry, similarity: sim };
+  });
+
+  // Hybrid: ensure formula paragraphs are considered if query is formula-related
+  let top = scored.sort((a, b) => b.similarity - a.similarity).slice(0, topK);
+  if (/formula|pengiraan|equation|=|×|\\sum/.test(query)) {
+    const formulaParas = scored.filter((e) => containsFormula(e.text));
+    top = [...new Set([...top, ...formulaParas])].slice(0, topK);
+  }
+
+  console.log("🏆 Top paragraphs IDs:", top.map((p) => p.id));
+  return top;
+}
+
+// ---------------------------
+// Build AI Context
+// ---------------------------
+
 export function buildContextForAI(relevantContent) {
-  if (!relevantContent || relevantContent.length === 0) {
-    return ''
-  }
+  if (!relevantContent || relevantContent.length === 0) return "";
 
-  let context = '\n\n=== RELEVANT TEXTBOOK CONTENT ===\n'
-  
-  relevantContent.forEach((content, index) => {
-    context += `\n[${index + 1}] ${content.subchapterTitle ? `(${content.subchapterTitle})` : ''}\n`
-    context += `${content.text}\n`
-  })
-  
-  context += '\n=== END TEXTBOOK CONTENT ===\n\n'
-  context += 'Use the above textbook content as your primary source when answering questions. '
-  context += 'If the information is in the textbook, cite it. '
-  context += 'If not, you may use your general knowledge but indicate this clearly.\n'
-  
-  return context
+  let ctx = "\n\n=== RELEVANT TEXTBOOK CONTENT ===\n";
+  relevantContent.forEach((item, i) => {
+    ctx += `\n[${i + 1}] (${item.chapterTitle}`;
+    if (item.subchapterTitle) ctx += ` → ${item.subchapterTitle}`;
+    ctx += `)\n${item.text}\n`;
+  });
+  ctx += "\n=== END TEXTBOOK CONTENT ===\n\n";
+  ctx += "Use the above textbook content as your primary source when answering. ";
+  ctx += "If you need to use outside knowledge, clearly indicate it.\n";
+  return ctx;
 }
 
-// All-in-one function for content retrieval
-export function retrieveContextForQuery(query, chapter, topK = 3) {
-  const textMap = createTextMap(chapter)
-  const relevantContent = findRelevantContent(query, textMap, topK)
-  return buildContextForAI(relevantContent)
+// ---------------------------
+// Single-tier Retrieval (Global Only)
+// ---------------------------
+
+export function retrieveContextForQuery(
+  query,
+  chaptersData,
+  { topK = 3 } = {}
+) {
+  console.log("🔍 Retrieving for query:", query);
+
+  const fullText = createTextMapFromAllChapters(chaptersData);
+  const relevantContent = findTopKTFIDF(query, fullText, topK);
+
+  console.log("📚 Retrieval source: entire textbook");
+  return buildContextForAI(relevantContent);
 }

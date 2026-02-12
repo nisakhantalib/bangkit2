@@ -249,8 +249,9 @@ export default function Home() {
   activeTab={activeAITab}
   onTabChange={setActiveAITab}
   triggerExplanation={triggerExplanation}
-  activeChapter={activeChapter}        // ADD THIS
-  activeSubchapter={activeSubchapter}  // ADD THIS
+  activeChapter={activeChapter}        
+  activeSubchapter={activeSubchapter}  
+  chaptersData={chaptersData}  
 />
 
 

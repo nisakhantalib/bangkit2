@@ -30,6 +30,8 @@ export async function POST(request) {
         { status: 400 }
       )
     }
+    console.log('📚 Context received by API:', context);
+
 
     const groqApiKey = process.env.GROQ_API_KEY
 
