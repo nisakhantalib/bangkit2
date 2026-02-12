@@ -332,26 +332,27 @@ export default function AIToolsPanelEnhanced({
 
             {/* Chat Messages */}
             <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-3 space-y-2 custom-scrollbar bg-gray-50 min-h-0">
-              {chatMessages.map((message) => (
-                <motion.div
-                  key={message.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
-                >
-                  <div
-                    className={`max-w-[85%] rounded-lg px-3 py-2 shadow-sm ${
-                      message.type === 'user'
-                        ? 'bg-primary-50 text-black'
-                        : 'bg-white text-gray-800 border border-gray-200'
-                    }`}
-                  >
-                    <ReactMarkdown remarkPlugins={[remarkGfm]} className="markdown-content text-xs leading-relaxed">
-                      {message.content}
-                    </ReactMarkdown>
-                  </div>
-                </motion.div>
-              ))}
+             {chatMessages.map((message, index) => (
+  <motion.div
+    key={message.id}
+    initial={{ opacity: 0, y: 10 }}
+    animate={{ opacity: 1, y: 0 }}
+    className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
+  >
+    <div
+      className={`max-w-[85%] rounded-lg px-3 py-2 shadow-sm ${
+        message.type === 'user'
+          ? 'bg-purple-200 text-black'
+          : 'bg-white text-gray-800 border border-gray-200'
+      }`}
+    >
+      <ReactMarkdown remarkPlugins={[remarkGfm]} className="markdown-content text-xs leading-relaxed">
+        {message.content}
+      </ReactMarkdown>
+    </div>
+  </motion.div>
+))}
+
               {isLoading && (
                 <motion.div
                   initial={{ opacity: 0 }}
