@@ -342,7 +342,7 @@ export default function AIToolsPanelEnhanced({
     <div
       className={`max-w-[85%] rounded-lg px-3 py-2 shadow-sm ${
         message.type === 'user'
-          ? 'bg-purple-200 text-black'
+          ? 'bg-purple-100 text-black'
           : 'bg-white text-gray-800 border border-gray-200'
       }`}
     >

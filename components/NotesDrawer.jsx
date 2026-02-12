@@ -98,7 +98,7 @@ export default function NotesDrawer({ isOpen, onClose, chapter, subchapter }) {
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center space-x-2">
                   <BookOpen size={24} />
-                  <h2 className="text-lg font-bold">My Notes</h2>
+                  <h2 className="text-lg font-bold">Nota Saya</h2>
                 </div>
                 <button
                   onClick={onClose}
@@ -117,7 +117,7 @@ export default function NotesDrawer({ isOpen, onClose, chapter, subchapter }) {
               <div className="mb-4">
                 <div className="flex items-center justify-between mb-2">
                   <label className="text-sm font-semibold text-gray-700">
-                    Your Notes
+                    Nota Saya
                   </label>
                   <div className="flex items-center space-x-2 text-xs text-gray-500">
                     <span>{wordCount} words</span>
@@ -133,13 +133,7 @@ export default function NotesDrawer({ isOpen, onClose, chapter, subchapter }) {
                   <textarea
                     value={notes}
                     onChange={handleNotesChange}
-                    placeholder="Start typing your notes here...
-
-Tips:
-- Key concepts
-- Important definitions
-- Questions to review
-- Personal insights"
+                    placeholder="Tulis nota anda di sini ..."
                     className="w-full h-96 p-3 resize-none focus:outline-none text-sm"
                   />
                 </div>
@@ -149,12 +143,11 @@ Tips:
               <div className="space-y-2">
                 <div className="bg-blue-50 border-2 border-dashed border-blue-200 rounded-lg p-3">
                   <p className="text-xs text-blue-800 font-medium mb-2">
-                    💡 Quick Tips
+                    💡Tips
                   </p>
                   <ul className="text-xs text-blue-700 space-y-1">
-                    <li>• Notes auto-save every 2 seconds</li>
-                    <li>• Use bullet points for clarity</li>
-                    <li>• Review notes before quizzes</li>
+                    <li>• Nota auto-save setiap 2 saat</li>
+                    <li>• Review nota sebelum quiz</li>
                   </ul>
                 </div>
               </div>
@@ -169,7 +162,7 @@ Tips:
                 whileTap={{ scale: 0.98 }}
               >
                 <Save size={18} />
-                <span>Save Now</span>
+                <span>Save sekarang</span>
               </motion.button>
 
               <motion.button
@@ -179,7 +172,7 @@ Tips:
                 whileTap={{ scale: 0.98 }}
               >
                 <Download size={18} />
-                <span>Export as Text</span>
+                <span>Export sebagai .txt</span>
               </motion.button>
             </div>
           </motion.div>
