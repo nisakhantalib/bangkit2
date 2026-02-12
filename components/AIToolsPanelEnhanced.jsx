@@ -34,7 +34,7 @@ export default function AIToolsPanelEnhanced({
     {
       id: 1,
       type: 'assistant',
-      content: 'Hello! I\'m your AI learning companion. Highlight any text from the content to get explanations, or ask me questions about the material.'
+      content: 'Salam sejahtera, saya B-Bot! Highlight teks untuk mendapatkan penerangan, atau ajukan soalan mengenai kandungan pembelajaran.'
     }
   ])
   const [inputMessage, setInputMessage] = useState('')

@@ -31,8 +31,8 @@ export default function ChapterNavigation({
   return (
     <div className="p-4">
       <div className="mb-6">
-        <h2 className="text-xl font-bold text-primary-900 mb-2">Course Content</h2>
-        <p className="text-sm text-gray-600">Science Form 5</p>
+        <h2 className="text-xl font-bold text-primary-900 mb-2">Isi Kandungan</h2>
+        <p className="text-sm text-gray-600">Sains Tingkatan 5</p>
       </div>
 
       <div className="space-y-2">

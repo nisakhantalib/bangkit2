@@ -144,7 +144,7 @@ export default function Home() {
             </div>
             <div>
               <h1 className="text-lg md:text-2xl font-bold">Bangkit</h1>
-              <p className="text-primary-200 text-xs md:text-sm hidden sm:block">Science Form 5 - AI-Powered Learning</p>
+              <p className="text-primary-200 text-xs md:text-sm hidden sm:block">Pembelajaran Berteraskan AI</p>
             </div>
           </div>
           
@@ -167,8 +167,8 @@ export default function Home() {
             </button>
 
             <div className="text-right hidden sm:block">
-              <p className="text-xs md:text-sm font-medium">Welcome back!</p>
-              <p className="text-xs text-primary-200 hidden md:block">Continue your learning journey</p>
+              <p className="text-xs md:text-sm font-medium">Selamat Datang!</p>
+              <p className="text-xs text-primary-200 hidden md:block">Teruskan pembelajaran anda</p>
             </div>
             <div className="w-8 h-8 md:w-10 md:h-10 bg-primary-500 rounded-full flex items-center justify-center font-semibold text-xs md:text-base">
               MR
@@ -278,7 +278,7 @@ export default function Home() {
               className="lg:hidden fixed left-0 top-0 h-full w-80 max-w-[85vw] bg-white shadow-2xl z-50 flex flex-col"
             >
               <div className="bg-primary-700 text-white p-4 flex items-center justify-between">
-                <h2 className="text-lg font-bold">Course Content</h2>
+                <h2 className="text-lg font-bold">Isi Kandungan</h2>
                 <button
                   onClick={() => setMobileChaptersOpen(false)}
                   className="p-2 hover:bg-primary-600 rounded-lg transition-colors"
@@ -336,8 +336,8 @@ export default function Home() {
   activeTab={activeAITab}
   onTabChange={setActiveAITab}
   triggerExplanation={triggerExplanation}
-  activeChapter={activeChapter}        // ADD THIS
-  activeSubchapter={activeSubchapter}  // ADD THIS
+  activeChapter={activeChapter}        
+  activeSubchapter={activeSubchapter}  
 />
             </motion.div>
           </>

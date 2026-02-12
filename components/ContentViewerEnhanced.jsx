@@ -198,7 +198,7 @@ export default function ContentViewerEnhanced({
   {/* Left group */}
   <div className="flex items-center space-x-2">
     <FileQuestion className="text-purple-600" size={24} />
-    <h2 className="text-xl font-bold text-purple-900">Test Your Knowledge</h2>
+    <h2 className="text-xl font-bold text-purple-900">Uji Pengetahuan Anda</h2>
   </div>
 
   {/* Right element */}
@@ -233,7 +233,7 @@ export default function ContentViewerEnhanced({
               />
             ) : (
               <p className="text-gray-600">
-                Test your understanding of {subchapter?.title} with {(quiz || subchapter?.quiz)?.questions?.length || 3} questions.
+                Uji pengetahuan anda mengenai {subchapter?.title} dengan {(quiz || subchapter?.quiz)?.questions?.length || 3} soalan.
                 {quiz && <span className="text-purple-600 font-medium"> (AI Generated)</span>}
               </p>
             )}
@@ -249,7 +249,7 @@ export default function ContentViewerEnhanced({
         transition={{ delay: 0.5 }}
       >
         <p className="text-sm text-gray-700">
-          💡 <strong>Petua:</strong> Pilih mana-mana teks untuk mendapatkan penjelasan peribadi daripada pembantu AI di panel sebelah kanan.
+          💡 <strong>Tips:</strong> Highlight mana-mana teks untuk mendapatkan penjelasan daripada AI Assistant di panel sebelah kanan.
         </p>
       </motion.div>
 
@@ -288,10 +288,10 @@ export default function ContentViewerEnhanced({
       }}
       className="bg-white rounded-lg shadow-xl p-4 flex items-center space-x-3 border-2 border-primary-200"
     >
-      <div className="flex items-center space-x-2 text-sm text-gray-600">
+      {/* <div className="flex items-center space-x-2 text-sm text-gray-600">
         <Sparkles size={16} className="text-primary-600" />
         <span className="font-medium">Text selected</span>
-      </div>
+      </div> */}
       <div className="flex space-x-2">
         <motion.button
           onClick={() => {
@@ -315,14 +315,14 @@ export default function ContentViewerEnhanced({
         >
           Add to Notes
         </motion.button>
-        <motion.button
+        {/* <motion.button
           onClick={() => setHighlightedText('')}
           className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-300 transition-colors"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
           Cancel
-        </motion.button>
+        </motion.button> */}
       </div>
     </motion.div>
   )}
